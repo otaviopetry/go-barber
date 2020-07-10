@@ -21,9 +21,6 @@ class User {
     @Column()
     password: string;
 
-    @Column()
-    date: Date;
-
     @CreateDateColumn()
     created_at: Date;
 
