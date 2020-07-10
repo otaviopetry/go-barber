@@ -31,8 +31,8 @@
                 "ts": "never"
             }
         ],
-        "@typescript-eslint/camelcase": "off",
-        "prettier/prettier": "error"
+        "prettier/prettier": "error",
+        "@typescript-eslint/camelcase": "off"
     },
     "settings": {
         "import/resolver": {

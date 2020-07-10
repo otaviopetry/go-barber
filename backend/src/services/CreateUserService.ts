@@ -1,4 +1,7 @@
 import { getRepository } from 'typeorm';
+import { hash } from 'bcryptjs';
+
+// import user model to use as data type
 import User from '../models/User';
 
 // create the user Request interface
@@ -23,11 +26,14 @@ class CreateUserService {
             throw new Error('Email address already in use.');
         }
 
+        // encrypt the password
+        const hashedPassword = await hash(password, 8);
+
         // create USER instance
         const user = usersRepository.create({
             name,
             email,
-            password,
+            password: hashedPassword,
         });
 
         // save it to db
