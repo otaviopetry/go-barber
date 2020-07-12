@@ -2,11 +2,15 @@ import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
 
+const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
+
 export default {
+    directory: tmpFolder,
+
     // configuration to use local file system - production environment
     storage: multer.diskStorage({
         // set the folder for uploads
-        destination: path.resolve(__dirname, '..', '..', 'tmp'),
+        destination: tmpFolder,
 
         // handle unique filename generation
         filename(request, file, callback) {

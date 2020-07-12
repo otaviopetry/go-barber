@@ -7,6 +7,9 @@ import uploadConfig from '../config/upload';
 // import create user service
 import CreateUserService from '../services/CreateUserService';
 
+// import user avatar service
+import UpdateUserAvatarService from '../services/UpdateUserAvatarService';
+
 // import middleware to be used on needed routes
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
@@ -54,7 +57,23 @@ usersRouter.patch(
 
     // final middleware
     async (request, response) => {
-        return response.json({ ok: true });
+        try {
+            // create service instance
+            const updateUserAvatar = new UpdateUserAvatarService();
+
+            // execute the service passing received data
+            const user = await updateUserAvatar.execute({
+                user_id: request.user.id,
+                avatarFilename: request.file.filename,
+            });
+
+            // hide password from response
+            delete user.password;
+
+            return response.json(user);
+        } catch (error) {
+            return response.status(400).json({ error: error.message });
+        }
     },
 );
 
