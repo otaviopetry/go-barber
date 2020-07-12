@@ -21,28 +21,24 @@ const upload = multer(uploadConfig);
 
 // create appointment route
 usersRouter.post('/', async (request, response) => {
-    try {
-        // capture user info from request
-        const { name, email, password } = request.body;
+    // capture user info from request
+    const { name, email, password } = request.body;
 
-        // create User service instance
-        const createUser = new CreateUserService();
+    // create User service instance
+    const createUser = new CreateUserService();
 
-        // execute it
-        const user = await createUser.execute({
-            name,
-            email,
-            password,
-        });
+    // execute it
+    const user = await createUser.execute({
+        name,
+        email,
+        password,
+    });
 
-        // hide password from response
-        delete user.password;
+    // hide password from response
+    delete user.password;
 
-        // send response to client
-        return response.json(user);
-    } catch (error) {
-        return response.status(error.statusCode).json({ error: error.message });
-    }
+    // send response to client
+    return response.json(user);
 });
 
 // update user avatar route
@@ -57,25 +53,19 @@ usersRouter.patch(
 
     // final middleware
     async (request, response) => {
-        try {
-            // create service instance
-            const updateUserAvatar = new UpdateUserAvatarService();
+        // create service instance
+        const updateUserAvatar = new UpdateUserAvatarService();
 
-            // execute the service passing received data
-            const user = await updateUserAvatar.execute({
-                user_id: request.user.id,
-                avatarFilename: request.file.filename,
-            });
+        // execute the service passing received data
+        const user = await updateUserAvatar.execute({
+            user_id: request.user.id,
+            avatarFilename: request.file.filename,
+        });
 
-            // hide password from response
-            delete user.password;
+        // hide password from response
+        delete user.password;
 
-            return response.json(user);
-        } catch (error) {
-            return response
-                .status(error.statusCode)
-                .json({ error: error.message });
-        }
+        return response.json(user);
     },
 );
 
