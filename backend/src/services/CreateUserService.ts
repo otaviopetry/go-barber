@@ -1,6 +1,8 @@
 import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 
+import AppError from '../errors/AppError';
+
 // import user model to use as data type
 import User from '../models/User';
 
@@ -23,7 +25,7 @@ class CreateUserService {
         });
 
         if (checkUserExists) {
-            throw new Error('Email address already in use.');
+            throw new AppError('Email address already in use.');
         }
 
         // encrypt the password

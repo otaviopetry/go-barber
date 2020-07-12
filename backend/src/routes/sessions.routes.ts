@@ -23,9 +23,9 @@ sessionsRouter.post('/', async (request, response) => {
 
         // return user found without password
         return response.json({ user, token });
-    } catch (err) {
+    } catch (error) {
         // if service throws error, send error message
-        return response.status(400).json({ error: err.message });
+        return response.status(error.statusCode).json({ error: error.message });
     }
 });
 

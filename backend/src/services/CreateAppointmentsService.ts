@@ -4,6 +4,8 @@ import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
+import AppError from '../errors/AppError';
+
 /**
  * Data receiving
  * Dealing with errors/exceptions
@@ -31,7 +33,7 @@ class CreateAppointmentService {
 
         // if it is, return error
         if (findAppointmentConflict) {
-            throw Error('This appointment is already booked.');
+            throw new AppError('This appointment is already booked.');
         }
 
         // create the appointment object

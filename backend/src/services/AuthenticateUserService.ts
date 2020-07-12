@@ -3,6 +3,8 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '../config/auth';
 
+import AppError from '../errors/AppError';
+
 // import user model to use as data type
 import User from '../models/User';
 
@@ -26,7 +28,7 @@ class AuthenticateUserService {
 
         // if doesnt exist, throw error
         if (!user) {
-            throw new Error('Incorrect email/password combination.');
+            throw new AppError('Incorrect email/password combination.', 401);
         }
 
         // check if informed password matches encrypted password using bcryptjs compare
@@ -34,7 +36,7 @@ class AuthenticateUserService {
 
         // if doesnt match, throw error
         if (!passwordMatched) {
-            throw new Error('Incorrect email/password combination.');
+            throw new AppError('Incorrect email/password combination.', 401);
         }
 
         // destructuring jwt config
