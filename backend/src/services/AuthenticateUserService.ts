@@ -1,5 +1,6 @@
 import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 
 // import user model to use as data type
 import User from '../models/User';
@@ -11,6 +12,7 @@ interface Request {
 
 interface Response {
     user: User;
+    token: string;
 }
 
 class AuthenticateUserService {
@@ -34,9 +36,16 @@ class AuthenticateUserService {
             throw new Error('Incorrect email/password combination.');
         }
 
+        // first parameter is the PAYLOAD (public), second is any secret key (md5 hash), third is configs
+        const token = sign({}, '2f5fb6eb78b9c2aa3f2876d7f14bb36b', {
+            subject: user.id,
+            expiresIn: '1d',
+        });
+
         // if matches, return user
         return {
             user,
+            token,
         };
     }
 }

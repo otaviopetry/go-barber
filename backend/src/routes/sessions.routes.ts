@@ -13,7 +13,7 @@ sessionsRouter.post('/', async (request, response) => {
         const authenticateUser = new AuthenticateUserService();
 
         // execute service passing informed data
-        const { user } = await authenticateUser.execute({
+        const { user, token } = await authenticateUser.execute({
             email,
             password,
         });
@@ -22,7 +22,7 @@ sessionsRouter.post('/', async (request, response) => {
         delete user.password;
 
         // return user found without password
-        return response.json({ user });
+        return response.json({ user, token });
     } catch (err) {
         // if service throws error, send error message
         return response.status(400).json({ error: err.message });
