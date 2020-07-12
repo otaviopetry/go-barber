@@ -5,8 +5,14 @@ import { getCustomRepository } from 'typeorm';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentsService';
 
+// check authentication middleware
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
 // create express instance
 const appointmentsRouter = Router();
+
+// set appointments router to always check for authentication
+appointmentsRouter.use(ensureAuthenticated);
 
 // list appointments route
 appointmentsRouter.get('/', async (request, response) => {
