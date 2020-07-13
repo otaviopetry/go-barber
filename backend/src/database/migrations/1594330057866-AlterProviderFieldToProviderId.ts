@@ -41,7 +41,7 @@ export default class AlterProviderFieldToProviderId1594330057866
         await queryRunner.dropForeignKey('appointments', 'AppointmentProvider');
 
         // undo the new column creation
-        await queryRunner.dropForeignKey('appointments', 'provider_id');
+        await queryRunner.dropColumn('appointments', 'provider_id');
 
         // undo the previous column deletion
         await queryRunner.addColumn(
