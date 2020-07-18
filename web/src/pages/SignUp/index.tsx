@@ -9,38 +9,44 @@ import logoImg from '../../assets/logo.svg';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-const SignUp: React.FC = () => (
-  <Container>
-    <Background />
-    <Content>
-      <img src={logoImg} alt="GoBarber" />
+const SignUp: React.FC = () => {
+  function handleSubmit(data: object): void {
+    console.log(data);
+  }
 
-      <Form onSubmit={}>
-        <h1>Faça seu cadastro</h1>
+  return (
+    <Container>
+      <Background />
+      <Content>
+        <img src={logoImg} alt="GoBarber" />
 
-        <Input
-          type="text"
-          name="username"
-          icon={FiUser}
-          placeholder="Seu nome completo"
-        />
-        <Input type="email" name="email" icon={FiMail} placeholder="E-mail" />
-        <Input
-          type="password"
-          name="userPassword"
-          icon={FiLock}
-          placeholder="Senha"
-        />
+        <Form onSubmit={handleSubmit}>
+          <h1>Faça seu cadastro</h1>
 
-        <Button type="submit">Cadastrar</Button>
-      </Form>
+          <Input
+            type="text"
+            name="username"
+            icon={FiUser}
+            placeholder="Seu nome completo"
+          />
+          <Input type="email" name="email" icon={FiMail} placeholder="E-mail" />
+          <Input
+            type="password"
+            name="userPassword"
+            icon={FiLock}
+            placeholder="Senha"
+          />
 
-      <a href="create">
-        <FiArrowLeft />
-        Voltar para logon
-      </a>
-    </Content>
-  </Container>
-);
+          <Button type="submit">Cadastrar</Button>
+        </Form>
+
+        <a href="create">
+          <FiArrowLeft />
+          Voltar para logon
+        </a>
+      </Content>
+    </Container>
+  );
+};
 
 export default SignUp;
