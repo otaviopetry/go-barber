@@ -1,4 +1,4 @@
-# GoBarber 💇
+# GoBarber 💇🧔
 
 ### _Platform for registering **Barber Shop professionals** and **consumers interested** in their services._
 <br>
