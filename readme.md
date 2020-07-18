@@ -4,6 +4,10 @@ Full-stack application developed during GoStack Bootcamp by <a href="https://www
 
 💇 Platform for registering Barber Shop professionals and consumers interested in their services.
 
+Currently working in user Web interface first screens, as the one below (design by Rocketseat):
+
+<img src="./readme-images/gobarber-screenshot.png" alt="Project screenshot">
+
 ## Built with
 
 - Typescript
