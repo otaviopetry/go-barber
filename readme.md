@@ -1,8 +1,9 @@
-# GoBarber ✂
+# GoBarber 💇
 
+### _Platform for registering **Barber Shop professionals** and **consumers interested** in their services._
+<br>
 Full-stack application developed during GoStack Bootcamp by <a href="https://www.rocketseat.com.br">Rocketseat</a>.
 
-💇 Platform for registering Barber Shop professionals and consumers interested in their services.
 
 Currently working in user Web interface first screens, as the one below (design by Rocketseat):
 
