@@ -4,7 +4,8 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import { Container, Content, Background } from './styles';
@@ -23,6 +24,7 @@ const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
   const { signIn, user } = useAuth();
+  const { addToast, removeToast } = useToast();
 
   console.log(user);
 
@@ -42,7 +44,7 @@ const SignIn: React.FC = () => {
           abortEarly: false,
         });
 
-        signIn({
+        await signIn({
           email: data.email,
           password: data.password,
         });
@@ -51,8 +53,11 @@ const SignIn: React.FC = () => {
 
         formRef.current?.setErrors(errors);
       }
+
+      addToast();
+      setTimeout(removeToast, 3000);
     },
-    [signIn],
+    [signIn, addToast],
   );
 
   return (
