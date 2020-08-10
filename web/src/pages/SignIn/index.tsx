@@ -1,4 +1,6 @@
-import React, { useRef, useCallback, useContext } from 'react';
+import React, { useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+
 import { FiLogIn, FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -84,10 +86,10 @@ const SignIn: React.FC = () => {
           <a href="forgot">Esqueci minha senha</a>
         </Form>
 
-        <a href="create">
+        <Link to="/signup">
           <FiLogIn />
           Criar conta
-        </a>
+        </Link>
       </Content>
       <Background />
     </Container>
