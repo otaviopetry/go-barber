@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StatusBar, Image } from 'react-native';
+import { StatusBar, Image } from 'react-native';
 
 import { Container, Title } from './styles';
 import logoImg from '../../assets/logo.png';

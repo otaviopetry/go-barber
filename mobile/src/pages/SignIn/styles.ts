@@ -11,5 +11,5 @@ export const Title = styled.Text`
   color: #f4ede8;
   font-family: 'RobotoSlab-Medium';
 
-  margin-top: 24px;
+  margin: 64px 0 24px;
 `;
