@@ -1,8 +1,12 @@
 import React from 'react';
 import { StatusBar, Image } from 'react-native';
 
-import { Container, Title } from './styles';
 import logoImg from '../../assets/logo.png';
+
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+
+import { Container, Title } from './styles';
 
 const SignIn: React.FC = () => {
   return (
@@ -10,7 +14,12 @@ const SignIn: React.FC = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#eaeaea" />
       <Container>
         <Image source={logoImg} />
-        <Title>Hello Dude!</Title>
+        <Title>Faça seu logon</Title>
+
+        <Input />
+        <Input />
+
+        <Button onPress={() => console.log('Button')}>Entrar</Button>
       </Container>
     </>
   );
