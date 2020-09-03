@@ -3,20 +3,24 @@ import React from 'react';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
+import AppProvider from './hooks';
+
 import Routes from './routes';
 
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          backgroundColor: '#312e38',
-        }}
-      >
-        <Routes />
-      </View>
+      <AppProvider>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            backgroundColor: '#312e38',
+          }}
+        >
+          <Routes />
+        </View>
+      </AppProvider>
     </NavigationContainer>
   );
 };
