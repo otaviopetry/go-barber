@@ -11,6 +11,7 @@ interface AuthContextData {
   user: object;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
+  loading: boolean;
 }
 
 interface AuthState {
@@ -22,6 +23,9 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState);
+
+  // create a loading state to avoid showing wrong page while communicating with async storage
+  const [loading, setLoading] = useState(true);
 
   // we create an function inside the hook because we cant use async in the hook main function
   useEffect(() => {
@@ -37,6 +41,8 @@ const AuthProvider: React.FC = ({ children }) => {
           user: JSON.parse(user[1])
         });
       }
+
+      setLoading(false);
     }
 
     loadStoragedData();
@@ -68,7 +74,7 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, signIn, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   );
