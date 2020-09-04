@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 // import User model to use as data type
-import User from './User';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 @Entity('appointments')
 class Appointment {

@@ -5,11 +5,13 @@ import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 import cors from 'cors';
 
-import routes from './routes';
-import uploadConfig from './config/upload';
-import AppError from './errors/AppError';
 
-import './database';
+
+import routes from './routes';
+import uploadConfig from '@config/upload';
+import AppError from '@shared/errors/AppError';
+
+import '@shared/infra/typeorm';
 
 const app = express();
 

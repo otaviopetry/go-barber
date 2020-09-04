@@ -2,13 +2,13 @@ import { Router } from 'express';
 
 // file upload dependencies
 import multer from 'multer';
-import uploadConfig from '../config/upload';
+import uploadConfig from '@config/upload';
 
 // import create user service
-import CreateUserService from '../services/CreateUserService';
+import CreateUserService from '@modules/users/services/CreateUserService';
 
 // import user avatar service
-import UpdateUserAvatarService from '../services/UpdateUserAvatarService';
+import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
 
 // import middleware to be used on needed routes
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
