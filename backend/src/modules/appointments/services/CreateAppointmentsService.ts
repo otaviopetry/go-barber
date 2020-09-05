@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
 import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
-import Appointment from '../infra/typeorm/entities/Appointment';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
-
 import AppError from '@shared/errors/AppError';
+import Appointment from '../infra/typeorm/entities/Appointment';
+import AppointmentsRepository from '../infra/typeorm/repositories/AppointmentsRepository';
 
 /**
  * Data receiving
@@ -41,9 +40,6 @@ class CreateAppointmentService {
             provider_id,
             date: appointmentDate,
         });
-
-        // save it do db
-        await appointmentsRepository.save(appointment);
 
         // create function result
         return appointment;
