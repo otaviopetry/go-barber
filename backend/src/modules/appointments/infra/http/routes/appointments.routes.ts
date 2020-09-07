@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { Router } from 'express';
 import { parseISO } from 'date-fns';
-import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
+import { container } from 'tsyringe';
 import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentsService';
 
 // check authentication middleware
@@ -31,15 +31,10 @@ appointmentsRouter.post('/', async (request, response) => {
     // convert the date
     const parsedDate = parseISO(date);
 
-    // new instance of repository
-    const appointmentsRepository = new AppointmentsRepository();
-
     // ## CALL SPECIFIC SERVICE
 
     // create an instance of the service
-    const createAppointment = new CreateAppointmentService(
-        appointmentsRepository,
-    );
+    const createAppointment = container.resolve(CreateAppointmentService);
 
     // execute the service
     const appointment = await createAppointment.execute({
