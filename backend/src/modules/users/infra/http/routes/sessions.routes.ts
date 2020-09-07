@@ -6,11 +6,11 @@ import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepo
 
 const sessionsRouter = Router();
 
-const usersRepository = new UsersRepository();
-
 sessionsRouter.post('/', async (request, response) => {
     // store email and password sent by user
     const { email, password } = request.body;
+
+    const usersRepository = new UsersRepository();
 
     // create service instance
     const authenticateUser = new AuthenticateUserService(usersRepository);

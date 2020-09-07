@@ -21,12 +21,12 @@ const usersRouter = Router();
 // create Multer instance
 const upload = multer(uploadConfig);
 
-const usersRepository = new UsersRepository();
-
 // create appointment route
 usersRouter.post('/', async (request, response) => {
     // capture user info from request
     const { name, email, password } = request.body;
+
+    const usersRepository = new UsersRepository();
 
     // create User service instance
     const createUser = new CreateUserService(usersRepository);
@@ -57,6 +57,8 @@ usersRouter.patch(
 
     // final middleware
     async (request, response) => {
+        const usersRepository = new UsersRepository();
+
         // create service instance
         const updateUserAvatar = new UpdateUserAvatarService(usersRepository);
 

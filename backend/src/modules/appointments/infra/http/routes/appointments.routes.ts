@@ -10,9 +10,6 @@ import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAut
 // create express instance
 const appointmentsRouter = Router();
 
-// new instance of repository
-const appointmentsRepository = new AppointmentsRepository();
-
 // set appointments router to always check for authentication
 appointmentsRouter.use(ensureAuthenticated);
 
@@ -33,6 +30,9 @@ appointmentsRouter.post('/', async (request, response) => {
 
     // convert the date
     const parsedDate = parseISO(date);
+
+    // new instance of repository
+    const appointmentsRepository = new AppointmentsRepository();
 
     // ## CALL SPECIFIC SERVICE
 
