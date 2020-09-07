@@ -1,18 +1,18 @@
 import { Router } from 'express';
-import { container } from 'tsyringe';
 
 // file upload dependencies
 import multer from 'multer';
 import uploadConfig from '@config/upload';
 
-// import create user service
-import CreateUserService from '@modules/users/services/CreateUserService';
-
-// import user avatar service
-import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
-
 // import middleware to be used on needed routes
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
+import UsersController from '../controllers/UsersController';
+import UserAvatarController from '../controllers/UserAvatarController';
+
+// create instances of controllers
+const usersController = new UsersController();
+const userAvatarController = new UserAvatarController();
 
 // create express instance
 const usersRouter = Router();
@@ -20,27 +20,8 @@ const usersRouter = Router();
 // create Multer instance
 const upload = multer(uploadConfig);
 
-// create appointment route
-usersRouter.post('/', async (request, response) => {
-    // capture user info from request
-    const { name, email, password } = request.body;
-
-    // create User service instance
-    const createUser = container.resolve(CreateUserService);
-
-    // execute it
-    const user = await createUser.execute({
-        name,
-        email,
-        password,
-    });
-
-    // hide password from response
-    delete user.password;
-
-    // send response to client
-    return response.json(user);
-});
+// create user route
+usersRouter.post('/', usersController.create);
 
 // update user avatar route
 usersRouter.patch(
@@ -53,21 +34,7 @@ usersRouter.patch(
     upload.single('avatar'),
 
     // final middleware
-    async (request, response) => {
-        // create service instance
-        const updateUserAvatar = container.resolve(UpdateUserAvatarService);
-
-        // execute the service passing received data
-        const user = await updateUserAvatar.execute({
-            user_id: request.user.id,
-            avatarFilename: request.file.filename,
-        });
-
-        // hide password from response
-        delete user.password;
-
-        return response.json(user);
-    },
+    userAvatarController.update,
 );
 
 export default usersRouter;

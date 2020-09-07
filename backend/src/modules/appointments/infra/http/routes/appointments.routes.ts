@@ -1,13 +1,15 @@
 /* eslint-disable camelcase */
 import { Router } from 'express';
-import { parseISO } from 'date-fns';
-import { container } from 'tsyringe';
-import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentsService';
 
 // check authentication middleware
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 
-// create express instance
+import AppointmentsController from '../controllers/AppointmentsController';
+
+// create instance of controller
+const appointmentsController = new AppointmentsController();
+
+// create instance of express Router
 const appointmentsRouter = Router();
 
 // set appointments router to always check for authentication
@@ -22,30 +24,6 @@ appointmentsRouter.use(ensureAuthenticated);
 }); */
 
 // create appointment route
-appointmentsRouter.post('/', async (request, response) => {
-    // ## PROCESS REQUEST
-
-    // get data from body
-    const { provider_id, date } = request.body;
-
-    // convert the date
-    const parsedDate = parseISO(date);
-
-    // ## CALL SPECIFIC SERVICE
-
-    // create an instance of the service
-    const createAppointment = container.resolve(CreateAppointmentService);
-
-    // execute the service
-    const appointment = await createAppointment.execute({
-        date: parsedDate,
-        provider_id,
-    });
-
-    // ## RETURN THE RESULT
-
-    // send appointment as response
-    return response.json(appointment);
-});
+appointmentsRouter.post('/', appointmentsController.create);
 
 export default appointmentsRouter;
