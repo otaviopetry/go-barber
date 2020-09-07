@@ -1,9 +1,8 @@
 /* eslint-disable camelcase */
 import { startOfHour } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
 import AppError from '@shared/errors/AppError';
 import Appointment from '../infra/typeorm/entities/Appointment';
-import AppointmentsRepository from '../infra/typeorm/repositories/AppointmentsRepository';
+import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 /**
  * Data receiving
@@ -11,22 +10,23 @@ import AppointmentsRepository from '../infra/typeorm/repositories/AppointmentsRe
  * Access to repository
  */
 
-interface Request {
+interface IRequest {
     provider_id: string;
     date: Date;
 }
 
 class CreateAppointmentService {
-    public async execute({ date, provider_id }: Request): Promise<Appointment> {
-        const appointmentsRepository = getCustomRepository(
-            AppointmentsRepository,
-        );
+    constructor(private appointmentsRepository: IAppointmentsRepository) {}
 
+    public async execute({
+        date,
+        provider_id,
+    }: IRequest): Promise<Appointment> {
         // force 1 hour blocks
         const appointmentDate = startOfHour(date);
 
         // use the findByDate method created in appointments repository
-        const findAppointmentConflict = await appointmentsRepository.findByDate(
+        const findAppointmentConflict = await this.appointmentsRepository.findByDate(
             appointmentDate,
         );
 
@@ -36,7 +36,7 @@ class CreateAppointmentService {
         }
 
         // create the appointment object
-        const appointment = appointmentsRepository.create({
+        const appointment = this.appointmentsRepository.create({
             provider_id,
             date: appointmentDate,
         });

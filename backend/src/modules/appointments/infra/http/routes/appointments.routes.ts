@@ -1,8 +1,7 @@
 /* eslint-disable camelcase */
 import { Router } from 'express';
 import { parseISO } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
-import AppointmentsRepository from '@modules/appointments/repositories/AppointmentsRepository';
+import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
 import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentsService';
 
 // check authentication middleware
@@ -11,19 +10,19 @@ import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAut
 // create express instance
 const appointmentsRouter = Router();
 
+// new instance of repository
+const appointmentsRepository = new AppointmentsRepository();
+
 // set appointments router to always check for authentication
 appointmentsRouter.use(ensureAuthenticated);
 
 // list appointments route
-appointmentsRouter.get('/', async (request, response) => {
-    // create typeORM custom repository
-    const appointmentsRepository = getCustomRepository(AppointmentsRepository);
-
+/* appointmentsRouter.get('/', async (request, response) => {
     // access the method all() in appointments and store the response
     const appointments = await appointmentsRepository.find();
 
     return response.json(appointments);
-});
+}); */
 
 // create appointment route
 appointmentsRouter.post('/', async (request, response) => {
@@ -38,7 +37,9 @@ appointmentsRouter.post('/', async (request, response) => {
     // ## CALL SPECIFIC SERVICE
 
     // create an instance of the service
-    const createAppointment = new CreateAppointmentService();
+    const createAppointment = new CreateAppointmentService(
+        appointmentsRepository,
+    );
 
     // execute the service
     const appointment = await createAppointment.execute({
