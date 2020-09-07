@@ -7,7 +7,7 @@ import AppError from '@shared/errors/AppError';
 import User from '../infra/typeorm/entities/User';
 
 // create the user Request interface
-interface Request {
+interface IRequest {
     name: string;
     email: string;
     password: string;
@@ -15,7 +15,7 @@ interface Request {
 
 // the service
 class CreateUserService {
-    public async execute({ name, email, password }: Request): Promise<User> {
+    public async execute({ name, email, password }: IRequest): Promise<User> {
         // create the USERS repository locally, using TypeORM own repository
         const usersRepository = getRepository(User);
 
