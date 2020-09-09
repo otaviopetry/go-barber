@@ -5,7 +5,8 @@ import crypto from 'crypto';
 const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
 
 export default {
-    directory: tmpFolder,
+    tmpFolder,
+    uploadsFolder: path.resolve(tmpFolder, 'uploads'),
 
     // configuration to use local file system - production environment
     storage: multer.diskStorage({
