@@ -1,8 +1,5 @@
 import { injectable, inject } from 'tsyringe';
 
-// import user model to use as data type
-// import User from '../infra/typeorm/entities/User';
-
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUsersRepository';
@@ -36,10 +33,20 @@ class SendForgotPasswordEmailService {
 
         const { token } = await this.userTokensRepository.generate(user.id);
 
-        this.mailProvider.sendMail(
-            email,
-            `Password recover requested: ${token}`,
-        );
+        this.mailProvider.sendMail({
+            to: {
+                name: user.name,
+                email: user.email,
+            },
+            subject: '[GoBarber] Recuperação de senha',
+            templateData: {
+                template: 'Olá, {{name}}: {{token}}',
+                variables: {
+                    name: user.name,
+                    token,
+                },
+            },
+        });
     }
 }
 
