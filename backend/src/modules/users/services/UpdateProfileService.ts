@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 
+import { check } from 'prettier';
 import User from '../infra/typeorm/entities/User';
 
 import IUsersRepository from '../repositories/IUsersRepository';
@@ -53,10 +54,23 @@ class UpdateProfileService {
         user.name = name;
         user.email = email;
 
-        if (password && old_password === user.password) {
+        if (password && !old_password) {
+            throw new AppError(
+                'You need to inform the old password to set a new one.',
+            );
+        }
+
+        if (password && old_password) {
+            const checkOldPassword = await this.hashProvider.compareHash(
+                old_password,
+                user.password,
+            );
+
+            if (!checkOldPassword) {
+                throw new AppError('Old password is not correct.');
+            }
+
             user.password = await this.hashProvider.generateHash(password);
-        } else if (password && old_password !== user.password) {
-            throw new AppError('Old password is not correct.');
         }
 
         await this.usersRepository.save(user);
