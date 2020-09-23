@@ -9,8 +9,9 @@ export default class AppointmentController {
         request: Request,
         response: Response,
     ): Promise<Response> {
-        // get data from body
+        // get data from body and request (provided by Ensure Authenticated middleware)
         const { provider_id, date } = request.body;
+        const user_id = request.user.id;
 
         // convert the date
         const parsedDate = parseISO(date);
@@ -24,6 +25,7 @@ export default class AppointmentController {
         const appointment = await createAppointment.execute({
             date: parsedDate,
             provider_id,
+            user_id,
         });
 
         // ## RETURN THE RESULT
