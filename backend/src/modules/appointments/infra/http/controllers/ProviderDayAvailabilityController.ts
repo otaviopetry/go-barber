@@ -9,7 +9,7 @@ export default class ProviderDayAvailabilityController {
         response: Response,
     ): Promise<Response> {
         // get data from body and request
-        const provider_id = request.params.id;
+        const { provider_id } = request.params;
         const { day, month, year } = request.body;
 
         // create an instance of the service
