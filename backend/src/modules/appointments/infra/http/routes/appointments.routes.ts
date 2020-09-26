@@ -1,5 +1,6 @@
-/* eslint-disable camelcase */
 import { Router } from 'express';
+
+import { celebrate, Segments, Joi } from 'celebrate';
 
 // check authentication middleware
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
@@ -17,16 +18,17 @@ const appointmentsRouter = Router();
 // set appointments router to always check for authentication
 appointmentsRouter.use(ensureAuthenticated);
 
-// list appointments route
-/* appointmentsRouter.get('/', async (request, response) => {
-    // access the method all() in appointments and store the response
-    const appointments = await appointmentsRepository.find();
-
-    return response.json(appointments);
-}); */
-
 // create appointment route
-appointmentsRouter.post('/', appointmentsController.create);
+appointmentsRouter.post(
+    '/',
+    celebrate({
+        [Segments.BODY]: {
+            provider_id: Joi.string().uuid().required(),
+            date: Joi.date(),
+        },
+    }),
+    appointmentsController.create,
+);
 
 appointmentsRouter.get('/scheduled', providerAppointmentsController.index);
 

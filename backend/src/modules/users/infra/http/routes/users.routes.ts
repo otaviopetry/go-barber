@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { celebrate, Segments, Joi } from 'celebrate';
 
 // file upload dependencies
 import multer from 'multer';
@@ -21,7 +22,17 @@ const usersRouter = Router();
 const upload = multer(uploadConfig);
 
 // create user route
-usersRouter.post('/', usersController.create);
+usersRouter.post(
+    '/',
+    celebrate({
+        [Segments.BODY]: {
+            name: Joi.string().required(),
+            email: Joi.string().email().required(),
+            password: Joi.string().required(),
+        },
+    }),
+    usersController.create,
+);
 
 // update user avatar route
 usersRouter.patch(
