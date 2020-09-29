@@ -4,10 +4,10 @@
 <br>
 Full-stack application developed during GoStack Bootcamp by <a href="https://www.rocketseat.com.br">Rocketseat</a>.
 
+<strong>Currently working on finishing the application backend.</strong>
 
-Currently working in user Web interface first screens, as the one below (design by Rocketseat):
-
-<img src="./readme-images/gobarber-screenshot.png" alt="Project screenshot">
+<img src="./readme-images/gobarber-screenshot.png" alt="Project screenshot"><br>
+Application initial screen (design by Rocketseat).
 
 ## Built with
 
@@ -16,18 +16,21 @@ Currently working in user Web interface first screens, as the one below (design 
 - React
 - React Native (coming soon)
 - PostgreSQL
+- MongoDB
 
-## Libraries used so far
+## Main libraries used so far
 
 - Express
 - Axios
+- TypeORM
 - Styled-components
 - React Icons
 - Polished
 - Unform
 - Yup
-- ESLint
-- Prettier
+- Multer
+- Nodemailer
+- Tsyringe
 
 
 ## Requirements
@@ -35,30 +38,8 @@ Currently working in user Web interface first screens, as the one below (design 
 - Node.js installed
 - ESLint editor plugin
 - Docker container with PostgreSQL
+- Docker container with MongoDB
 - Yarn
-
-
-### Backend
-
-To install all dependencies, navigate to backend folder and run:
-```
-yarn
-```
-When its done, run the migrations:
-```
-yarn typeorm migration:run
-```
-
-### Web
-
-To install all dependencies, navigate to web folder and run:
-```
-yarn
-```
-To start the application, run:
-```
-yarn start
-```
 
 
 ## License
