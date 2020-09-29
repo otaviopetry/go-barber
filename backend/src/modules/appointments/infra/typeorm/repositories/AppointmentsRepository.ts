@@ -7,80 +7,80 @@ import ICheckProviderDayAvailabilityDTO from '@modules/appointments/dtos/ICheckP
 import Appointment from '../entities/Appointment';
 
 class AppointmentsRepository implements IAppointmentsRepository {
-    private ormRepository: Repository<Appointment>;
+  private ormRepository: Repository<Appointment>;
 
-    constructor() {
-        this.ormRepository = getRepository(Appointment);
-    }
+  constructor() {
+    this.ormRepository = getRepository(Appointment);
+  }
 
-    // public method to find appointments in same slot
-    public async findByDate(date: Date): Promise<Appointment | undefined> {
-        // check if date is not booked
-        const findAppointment = await this.ormRepository.findOne({
-            where: { date },
-        });
+  // public method to find appointments in same slot
+  public async findByDate(date: Date): Promise<Appointment | undefined> {
+    // check if date is not booked
+    const findAppointment = await this.ormRepository.findOne({
+      where: { date },
+    });
 
-        // if a conflict is found, show appointment
-        return findAppointment;
-    }
+    // if a conflict is found, show appointment
+    return findAppointment;
+  }
 
-    public async checkProviderMonthAvailability({
+  public async checkProviderMonthAvailability({
+    provider_id,
+    month,
+    year,
+  }: ICheckProviderMonthAvailabilityDTO): Promise<Appointment[]> {
+    const parsedMonth = String(month).padStart(2, '0');
+
+    const appointments = await this.ormRepository.find({
+      where: {
         provider_id,
-        month,
-        year,
-    }: ICheckProviderMonthAvailabilityDTO): Promise<Appointment[]> {
-        const parsedMonth = String(month).padStart(2, '0');
+        date: Raw(
+          dateFieldName =>
+            `to_char(${dateFieldName}, 'MM-YYYY') = '${parsedMonth}-${year}'`,
+        ),
+      },
+    });
 
-        const appointments = await this.ormRepository.find({
-            where: {
-                provider_id,
-                date: Raw(
-                    dateFieldName =>
-                        `to_char(${dateFieldName}, 'MM-YYYY') = '${parsedMonth}-${year}'`,
-                ),
-            },
-        });
+    return appointments;
+  }
 
-        return appointments;
-    }
+  public async checkProviderDayAvailability({
+    provider_id,
+    day,
+    month,
+    year,
+  }: ICheckProviderDayAvailabilityDTO): Promise<Appointment[]> {
+    const parsedDay = String(day).padStart(2, '0');
+    const parsedMonth = String(month).padStart(2, '0');
 
-    public async checkProviderDayAvailability({
+    const appointments = await this.ormRepository.find({
+      where: {
         provider_id,
-        day,
-        month,
-        year,
-    }: ICheckProviderDayAvailabilityDTO): Promise<Appointment[]> {
-        const parsedDay = String(day).padStart(2, '0');
-        const parsedMonth = String(month).padStart(2, '0');
+        date: Raw(
+          dateFieldName =>
+            `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
+        ),
+      },
+    });
 
-        const appointments = await this.ormRepository.find({
-            where: {
-                provider_id,
-                date: Raw(
-                    dateFieldName =>
-                        `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
-                ),
-            },
-        });
+    return appointments;
+  }
 
-        return appointments;
-    }
+  public async create({
+    provider_id,
+    user_id,
+    date,
+  }: ICreateAppointmentDTO): Promise<Appointment> {
+    const appointment = this.ormRepository.create({
+      provider_id,
+      user_id,
+      date,
+    });
 
-    public async create({
-        provider_id,
-        user_id,
-        date,
-    }: ICreateAppointmentDTO): Promise<Appointment> {
-        const appointment = this.ormRepository.create({
-            provider_id,
-            user_id,
-            date,
-        });
+    await this.ormRepository.save(appointment);
 
-        await this.ormRepository.save(appointment);
-
-        return appointment;
-    }
+    return appointment;
+  }
 }
 
 export default AppointmentsRepository;

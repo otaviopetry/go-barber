@@ -20,14 +20,14 @@ appointmentsRouter.use(ensureAuthenticated);
 
 // create appointment route
 appointmentsRouter.post(
-    '/',
-    celebrate({
-        [Segments.BODY]: {
-            provider_id: Joi.string().uuid().required(),
-            date: Joi.date(),
-        },
-    }),
-    appointmentsController.create,
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      provider_id: Joi.string().uuid().required(),
+      date: Joi.date(),
+    },
+  }),
+  appointmentsController.create,
 );
 
 appointmentsRouter.get('/scheduled', providerAppointmentsController.index);
