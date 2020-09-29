@@ -19,33 +19,33 @@ const userAvatarController = new UserAvatarController();
 const usersRouter = Router();
 
 // create Multer instance
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 
 // create user route
 usersRouter.post(
-    '/',
-    celebrate({
-        [Segments.BODY]: {
-            name: Joi.string().required(),
-            email: Joi.string().email().required(),
-            password: Joi.string().required(),
-        },
-    }),
-    usersController.create,
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+  }),
+  usersController.create,
 );
 
 // update user avatar route
 usersRouter.patch(
-    '/avatar',
+  '/avatar',
 
-    // middleware 1 - check auth
-    ensureAuthenticated,
+  // middleware 1 - check auth
+  ensureAuthenticated,
 
-    // midleware 2 - use multer to deal with sent file
-    upload.single('avatar'),
+  // midleware 2 - use multer to deal with sent file
+  upload.single('avatar'),
 
-    // final middleware
-    userAvatarController.update,
+  // final middleware
+  userAvatarController.update,
 );
 
 export default usersRouter;
