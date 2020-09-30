@@ -44,8 +44,6 @@ class ListProviderAppointmentsService {
         },
       );
 
-      console.log('Provider cache has been saved.');
-
       await this.cacheProvider.save(cacheKey, appointments);
     }
 
