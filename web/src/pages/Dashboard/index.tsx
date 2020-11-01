@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { isToday, format } from 'date-fns';
+import { isToday, format, parseISO, isAfter } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import DayPicker, { DayModifiers } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -30,6 +30,7 @@ interface MonthAvailabilityItem {
 interface Appointment {
   id: string;
   date: string;
+  formattedHour: string;
   user: {
     name: string;
     avatar_url: string;
@@ -71,7 +72,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     api
-      .get('/appointments/scheduled', {
+      .get<Appointment[]>('/appointments/scheduled', {
         params: {
           year: selectedDate.getFullYear(),
           month: selectedDate.getMonth() + 1,
@@ -79,8 +80,14 @@ const Dashboard: React.FC = () => {
         },
       })
       .then(response => {
-        setAppointments(response.data);
-        console.log(response.data);
+        const formattedAppointments = response.data.map(appointment => {
+          return {
+            ...appointment,
+            formattedHour: format(parseISO(appointment.date), 'HH:mm'),
+          };
+        });
+
+        setAppointments(formattedAppointments);
       });
   }, [selectedDate]);
 
@@ -106,6 +113,24 @@ const Dashboard: React.FC = () => {
   const selectedWeekDay = useMemo(() => {
     return format(selectedDate, 'cccc', { locale: ptBR });
   }, [selectedDate]);
+
+  const morningAppointments = useMemo(() => {
+    return appointments.filter(appointment => {
+      return parseISO(appointment.date).getHours() < 12;
+    });
+  }, [appointments]);
+
+  const afternoonAppointments = useMemo(() => {
+    return appointments.filter(appointment => {
+      return parseISO(appointment.date).getHours() >= 12;
+    });
+  }, [appointments]);
+
+  const nextAppointment = useMemo(() => {
+    return appointments.find(appointment =>
+      isAfter(parseISO(appointment.date), new Date()),
+    );
+  }, [appointments]);
 
   return (
     <Container>
@@ -136,76 +161,74 @@ const Dashboard: React.FC = () => {
             <span>{selectedWeekDay}</span>
           </p>
 
-          <NextAppointment>
-            <strong>Atendimento a seguir</strong>
-            <div>
-              <img
-                src="https://avatars3.githubusercontent.com/u/55718618?s=460&u=4a2cd153a684ad1aa997b7ee48d546c267448c75&v=4"
-                alt="Otavio Petry"
-              />
+          {isToday(selectedDate) && nextAppointment && (
+            <NextAppointment>
+              <strong>Agendamento a seguir</strong>
+              <div>
+                <img
+                  src={nextAppointment.user.avatar_url}
+                  alt={nextAppointment.user.name}
+                />
 
-              <strong>Otavio Petry</strong>
-              <span>
-                <FiClock />
-                10:00
-              </span>
-            </div>
-          </NextAppointment>
+                <strong>{nextAppointment.user.name}</strong>
+                <span>
+                  <FiClock />
+                  {nextAppointment.formattedHour}
+                </span>
+              </div>
+            </NextAppointment>
+          )}
 
           <Section>
             <strong>Manhã</strong>
 
-            <Appointment>
-              <span>
-                <FiClock />
-                11:00
-              </span>
+            {morningAppointments.length === 0 && (
+              <p>Nenhum agendamento para este período.</p>
+            )}
 
-              <div>
-                <img
-                  src="https://avatars3.githubusercontent.com/u/55718618?s=460&u=4a2cd153a684ad1aa997b7ee48d546c267448c75&v=4"
-                  alt="Otavio Petry"
-                />
+            {morningAppointments.map(appointment => (
+              <Appointment key={appointment.id}>
+                <span>
+                  <FiClock />
+                  {appointment.formattedHour}
+                </span>
 
-                <strong>Otavio Petry</strong>
-              </div>
-            </Appointment>
+                <div>
+                  <img
+                    src={appointment.user.avatar_url}
+                    alt={appointment.user.name}
+                  />
 
-            <Appointment>
-              <span>
-                <FiClock />
-                11:00
-              </span>
-
-              <div>
-                <img
-                  src="https://avatars3.githubusercontent.com/u/55718618?s=460&u=4a2cd153a684ad1aa997b7ee48d546c267448c75&v=4"
-                  alt="Otavio Petry"
-                />
-
-                <strong>Otavio Petry</strong>
-              </div>
-            </Appointment>
+                  <strong>{appointment.user.name}</strong>
+                </div>
+              </Appointment>
+            ))}
           </Section>
 
           <Section>
             <strong>Tarde</strong>
 
-            <Appointment>
-              <span>
-                <FiClock />
-                11:00
-              </span>
+            {afternoonAppointments.length === 0 && (
+              <p>Nenhum agendamento para este período.</p>
+            )}
 
-              <div>
-                <img
-                  src="https://avatars3.githubusercontent.com/u/55718618?s=460&u=4a2cd153a684ad1aa997b7ee48d546c267448c75&v=4"
-                  alt="Otavio Petry"
-                />
+            {afternoonAppointments.map(appointment => (
+              <Appointment key={appointment.id}>
+                <span>
+                  <FiClock />
+                  {appointment.formattedHour}
+                </span>
 
-                <strong>Otavio Petry</strong>
-              </div>
-            </Appointment>
+                <div>
+                  <img
+                    src={appointment.user.avatar_url}
+                    alt={appointment.user.name}
+                  />
+
+                  <strong>{appointment.user.name}</strong>
+                </div>
+              </Appointment>
+            ))}
           </Section>
         </Schedule>
 
