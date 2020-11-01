@@ -6,7 +6,7 @@ import ListProviderAppointmentsService from '@modules/appointments/services/List
 export default class ProviderAppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
     // get data from body and request (provided by Ensure Authenticated middleware)
-    const { day, month, year } = request.body;
+    const { day, month, year } = request.query;
     const provider_id = request.user.id;
 
     // ## CALL SPECIFIC SERVICE
@@ -19,9 +19,9 @@ export default class ProviderAppointmentsController {
     // execute the service
     const appointments = await listProviderAppointments.execute({
       provider_id,
-      day,
-      month,
-      year,
+      day: Number(day),
+      month: Number(month),
+      year: Number(year),
     });
 
     // ## RETURN THE RESULT
