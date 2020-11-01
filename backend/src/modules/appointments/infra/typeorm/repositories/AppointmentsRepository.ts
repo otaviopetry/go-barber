@@ -14,10 +14,13 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   // public method to find appointments in same slot
-  public async findByDate(date: Date): Promise<Appointment | undefined> {
+  public async findByDate(
+    date: Date,
+    provider_id: string,
+  ): Promise<Appointment | undefined> {
     // check if date is not booked
     const findAppointment = await this.ormRepository.findOne({
-      where: { date },
+      where: { date, provider_id },
     });
 
     // if a conflict is found, show appointment

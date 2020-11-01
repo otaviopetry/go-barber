@@ -57,6 +57,7 @@ class CreateAppointmentService {
     // use the findByDate method created in appointments repository
     const findAppointmentConflict = await this.appointmentsRepository.findByDate(
       appointmentDate,
+      provider_id,
     );
 
     // if it is, return error

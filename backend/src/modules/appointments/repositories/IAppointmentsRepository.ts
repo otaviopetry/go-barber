@@ -4,12 +4,12 @@ import ICheckProviderMonthAvailabilityDTO from '../dtos/ICheckProviderMonthAvail
 import ICheckProviderDayAvailabilityDTO from '../dtos/ICheckProviderDayAvailabilityDTO';
 
 export default interface IAppointmentsRepository {
-    create(data: ICreateAppointmentDTO): Promise<Appointment>;
-    findByDate(date: Date): Promise<Appointment | undefined>;
-    checkProviderMonthAvailability(
-        data: ICheckProviderMonthAvailabilityDTO,
-    ): Promise<Appointment[]>;
-    checkProviderDayAvailability(
-        data: ICheckProviderDayAvailabilityDTO,
-    ): Promise<Appointment[]>;
+  create(data: ICreateAppointmentDTO): Promise<Appointment>;
+  findByDate(date: Date, provider_id: string): Promise<Appointment | undefined>;
+  checkProviderMonthAvailability(
+    data: ICheckProviderMonthAvailabilityDTO,
+  ): Promise<Appointment[]>;
+  checkProviderDayAvailability(
+    data: ICheckProviderDayAvailabilityDTO,
+  ): Promise<Appointment[]>;
 }

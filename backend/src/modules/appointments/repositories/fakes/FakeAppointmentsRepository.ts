@@ -9,62 +9,67 @@ import ICheckProviderDayAvailabilityDTO from '@modules/appointments/dtos/ICheckP
 import Appointment from '../../infra/typeorm/entities/Appointment';
 
 class FakeAppointmentsRepository implements IAppointmentsRepository {
-    private appointments: Appointment[] = [];
+  private appointments: Appointment[] = [];
 
-    // public method to find appointments in same slot
-    public async findByDate(date: Date): Promise<Appointment | undefined> {
-        const findAppointment = this.appointments.find(appointment =>
-            isEqual(appointment.date, date),
-        );
+  // public method to find appointments in same slot
+  public async findByDate(
+    date: Date,
+    provider_id: string,
+  ): Promise<Appointment | undefined> {
+    const findAppointment = this.appointments.find(
+      appointment =>
+        isEqual(appointment.date, date) &&
+        appointment.provider_id === provider_id,
+    );
 
-        return findAppointment;
-    }
+    return findAppointment;
+  }
 
-    public async checkProviderMonthAvailability({
-        provider_id,
-        month,
-        year,
-    }: ICheckProviderMonthAvailabilityDTO): Promise<Appointment[]> {
-        const appointments = await this.appointments.filter(
-            appointment =>
-                appointment.provider_id === provider_id &&
-                getMonth(appointment.date) + 1 === month &&
-                getYear(appointment.date) === year,
-        );
+  public async checkProviderMonthAvailability({
+    provider_id,
+    month,
+    year,
+  }: ICheckProviderMonthAvailabilityDTO): Promise<Appointment[]> {
+    const appointments = await this.appointments.filter(
+      appointment =>
+        appointment.provider_id === provider_id &&
+        getMonth(appointment.date) + 1 === month &&
+        getYear(appointment.date) === year,
+    );
 
-        return appointments;
-    }
+    return appointments;
+  }
 
-    public async checkProviderDayAvailability({
-        provider_id,
-        day,
-        month,
-        year,
-    }: ICheckProviderDayAvailabilityDTO): Promise<Appointment[]> {
-        const appointments = await this.appointments.filter(
-            appointment =>
-                appointment.provider_id === provider_id &&
-                getDate(appointment.date) === day &&
-                getMonth(appointment.date) + 1 === month &&
-                getYear(appointment.date) === year,
-        );
+  public async checkProviderDayAvailability({
+    provider_id,
+    day,
+    month,
+    year,
+  }: ICheckProviderDayAvailabilityDTO): Promise<Appointment[]> {
+    const appointments = await this.appointments.filter(
+      appointment =>
+        appointment.provider_id === provider_id &&
+        getDate(appointment.date) === day &&
+        getMonth(appointment.date) + 1 === month &&
+        getYear(appointment.date) === year,
+    );
 
-        return appointments;
-    }
+    return appointments;
+  }
 
-    public async create({
-        provider_id,
-        user_id,
-        date,
-    }: ICreateAppointmentDTO): Promise<Appointment> {
-        const appointment = new Appointment();
+  public async create({
+    provider_id,
+    user_id,
+    date,
+  }: ICreateAppointmentDTO): Promise<Appointment> {
+    const appointment = new Appointment();
 
-        Object.assign(appointment, { id: uuid(), date, provider_id, user_id });
+    Object.assign(appointment, { id: uuid(), date, provider_id, user_id });
 
-        this.appointments.push(appointment);
+    this.appointments.push(appointment);
 
-        return appointment;
-    }
+    return appointment;
+  }
 }
 
 export default FakeAppointmentsRepository;
