@@ -1,27 +1,25 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import ListProvidersService from '@modules/appointments/services/ListProvidersService';
 
 export default class ProvidersController {
-    public async index(
-        request: Request,
-        response: Response,
-    ): Promise<Response> {
-        // get data from body
-        const user_id = request.user.id;
+  public async index(request: Request, response: Response): Promise<Response> {
+    // get data from body
+    const user_id = request.user.id;
 
-        // create an instance of the service
-        const listProviders = container.resolve(ListProvidersService);
+    // create an instance of the service
+    const listProviders = container.resolve(ListProvidersService);
 
-        // execute the service
-        const providers = await listProviders.execute({
-            user_id,
-        });
+    // execute the service
+    const providers = await listProviders.execute({
+      user_id,
+    });
 
-        // ## RETURN THE RESULT
+    // ## RETURN THE RESULT
 
-        // send appointment as response
-        return response.json(providers);
-    }
+    // send appointment as response
+    return response.json(classToClass(providers));
+  }
 }
