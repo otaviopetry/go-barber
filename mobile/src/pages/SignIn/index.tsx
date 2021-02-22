@@ -1,7 +1,6 @@
 import React, { useCallback, useRef } from 'react';
-import { StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import {
+  StyleSheet,
   StatusBar,
   View,
   Image,
@@ -9,8 +8,10 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  Alert
+  Alert,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import Icon from 'react-native-vector-icons/Feather';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
@@ -34,6 +35,11 @@ import {
   CreateAccountButtonText,
 } from './styles';
 
+const styles = StyleSheet.create({
+  form: {
+    width: '100%',
+  },
+});
 interface SignInFormData {
   email: string;
   password: string;
@@ -50,7 +56,9 @@ const SignIn: React.FC = () => {
   const handleSignIn = useCallback(
     async (data: SignInFormData) => {
       try {
-        formRef.current?.setErrors({});
+        if (formRef.current) {
+          formRef.current.setErrors({});
+        }
 
         const schema = Yup.object().shape({
           email: Yup.string()
@@ -71,18 +79,20 @@ const SignIn: React.FC = () => {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
 
-          formRef.current?.setErrors(errors);
+          if (formRef.current) {
+            formRef.current.setErrors(errors);
+          }
 
-          return;
+          console.log(errors);
+
+          Alert.alert(
+            'Erro na autenticação',
+            'Ocorreu um erro ao fazer login. Cheque suas credenciais.',
+          );
         }
-
-        Alert.alert(
-          'Erro na autenticação',
-          'Ocorreu um erro ao fazer login. Cheque suas credenciais.'
-        )
       }
     },
-    [signIn]
+    [signIn],
   );
 
   return (
@@ -113,7 +123,9 @@ const SignIn: React.FC = () => {
                 placeholder="E-mail"
                 returnKeyType="next"
                 onSubmitEditing={() => {
-                  passwordInputRef.current?.focus();
+                  if (passwordInputRef.current) {
+                    passwordInputRef.current.focus();
+                  }
                 }}
               />
               <Input
@@ -125,13 +137,21 @@ const SignIn: React.FC = () => {
                 secureTextEntry
                 returnKeyType="send"
                 onSubmitEditing={() => {
-                  formRef.current?.submitForm();
+                  if (formRef.current) {
+                    formRef.current.submitForm();
+                  }
                 }}
               />
 
-              <Button onPress={() => {
-                formRef.current?.submitForm();
-              }}>Entrar</Button>
+              <Button
+                onPress={() => {
+                  if (formRef.current) {
+                    formRef.current.submitForm();
+                  }
+                }}
+              >
+                Entrar
+              </Button>
             </Form>
 
             <ForgotPassword>
@@ -152,11 +172,5 @@ const SignIn: React.FC = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  form: {
-    width: '100%'
-  }
-})
 
 export default SignIn;
