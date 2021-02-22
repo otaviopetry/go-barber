@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useCallback, useRef } from 'react';
 import {
   StyleSheet,
@@ -83,13 +84,15 @@ const SignIn: React.FC = () => {
             formRef.current.setErrors(errors);
           }
 
-          console.log(errors);
-
-          Alert.alert(
-            'Erro na autenticação',
-            'Ocorreu um erro ao fazer login. Cheque suas credenciais.',
-          );
+          return;
         }
+
+        console.log(err);
+
+        Alert.alert(
+          'Erro na autenticação',
+          'Ocorreu um erro ao fazer login. Cheque suas credenciais.',
+        );
       }
     },
     [signIn],
@@ -123,9 +126,7 @@ const SignIn: React.FC = () => {
                 placeholder="E-mail"
                 returnKeyType="next"
                 onSubmitEditing={() => {
-                  if (passwordInputRef.current) {
-                    passwordInputRef.current.focus();
-                  }
+                  passwordInputRef.current?.focus();
                 }}
               />
               <Input
@@ -137,17 +138,13 @@ const SignIn: React.FC = () => {
                 secureTextEntry
                 returnKeyType="send"
                 onSubmitEditing={() => {
-                  if (formRef.current) {
-                    formRef.current.submitForm();
-                  }
+                  formRef.current?.submitForm();
                 }}
               />
 
               <Button
                 onPress={() => {
-                  if (formRef.current) {
-                    formRef.current.submitForm();
-                  }
+                  formRef.current?.submitForm();
                 }}
               >
                 Entrar

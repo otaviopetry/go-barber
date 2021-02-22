@@ -14,7 +14,7 @@ interface SignInCredentials {
 }
 
 interface AuthContextData {
-  user: Object;
+  user: any;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
   loading: boolean;
@@ -22,7 +22,7 @@ interface AuthContextData {
 
 interface AuthState {
   token: string;
-  user: Object;
+  user: any;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -59,6 +59,8 @@ const AuthProvider: React.FC = ({ children }) => {
       email,
       password,
     });
+
+    console.log(response);
 
     const { token, user } = response.data;
 
