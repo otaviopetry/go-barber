@@ -1,7 +1,17 @@
+import { RectButton } from 'react-native-gesture-handler';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import styled from 'styled-components/native';
+import { boolean } from 'yup';
 
 import { Provider } from './index';
+
+interface ProviderContainerProps {
+  selected: boolean;
+}
+
+interface ProviderNameProps {
+  selected: boolean;
+}
 
 export const Container = styled.View`
   flex: 1;
@@ -41,8 +51,9 @@ export const ProvidersList = styled.FlatList<Provider[]>`
   padding: 32px 24px;
 `;
 
-export const ProviderContainer = styled.View`
-  background: #3e3b47;
+export const ProviderContainer = styled(RectButton)`
+  background: ${(props: ProviderContainerProps) =>
+    props.selected ? '#ff9000' : '#3e3b47'};
   flex-direction: row;
   align-items: center;
   padding: 8px 12px;
@@ -60,5 +71,6 @@ export const ProviderName = styled.Text`
   margin-left: 8px;
   font-family: 'RobotoSlab-Medium';
   font-size: 16px;
-  color: #f4ede8;
+  color: ${(props: ProviderNameProps) =>
+    props.selected ? '#232129' : '#f4ede8'};
 `;

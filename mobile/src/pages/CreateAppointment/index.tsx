@@ -32,10 +32,13 @@ export interface Provider {
 const CreateAppointment: React.FC = () => {
   const { user } = useAuth();
   const route = useRoute();
-  const { providerId } = route.params as RouteParams;
+  const routeParams = route.params as RouteParams;
   const { goBack } = useNavigation();
 
   const [providers, setProviders] = useState<Provider[]>([]);
+  const [selectedProvider, setSelectedProvider] = useState(
+    routeParams.providerId,
+  );
 
   useEffect(() => {
     api.get('providers').then(response => {
@@ -47,10 +50,19 @@ const CreateAppointment: React.FC = () => {
     goBack();
   }, [goBack]);
 
+  const handleSelectProvider = useCallback((providerId: string) => {
+    setSelectedProvider(providerId);
+  }, []);
+
   const ProviderItem = ({ item: provider }: { item: Provider }) => (
-    <ProviderContainer>
+    <ProviderContainer
+      onPress={() => handleSelectProvider(provider.id)}
+      selected={provider.id === selectedProvider}
+    >
       <ProviderAvatar source={{ uri: provider.avatar_url }} />
-      <ProviderName>{provider.name}</ProviderName>
+      <ProviderName selected={provider.id === selectedProvider}>
+        {provider.name}
+      </ProviderName>
     </ProviderContainer>
   );
 
