@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
   );
 
   const ListTitle = (title: string) => (
-    <ProvidersListTitle>Cabelereiros</ProvidersListTitle>
+    <ProvidersListTitle>Cabeleireiros</ProvidersListTitle>
   );
 
   return (
