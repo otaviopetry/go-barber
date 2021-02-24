@@ -1,7 +1,8 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
+import { format } from 'date-fns';
 
 import Icon from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../hooks/auth';
@@ -22,6 +23,7 @@ import {
   CalendarTitle,
   OpenDatePickerButton,
   OpenDatePickerButtonText,
+  AvailabilityTitle,
 } from './styles';
 
 interface RouteParams {
@@ -95,6 +97,30 @@ const CreateAppointment: React.FC = () => {
     }
   }, []);
 
+  const morningAvailability = useMemo(() => {
+    return availability
+      .filter(({ hour }) => hour < 12)
+      .map(({ hour, available }) => {
+        return {
+          hour,
+          available,
+          hourFormatted: format(new Date().setHours(hour), 'HH:00'),
+        };
+      });
+  }, [availability]);
+
+  const afternoonAvailability = useMemo(() => {
+    return availability
+      .filter(({ hour }) => hour >= 12)
+      .map(({ hour, available }) => {
+        return {
+          hour,
+          available,
+          hourFormatted: format(new Date().setHours(hour), 'HH:00'),
+        };
+      });
+  }, [availability]);
+
   const ProviderItem = ({ item: provider }: { item: Provider }) => (
     <ProviderContainer
       onPress={() => handleSelectProvider(provider.id)}
@@ -137,16 +163,28 @@ const CreateAppointment: React.FC = () => {
             Selecionar outra data
           </OpenDatePickerButtonText>
         </OpenDatePickerButton>
-
-        {showDatePicker && (
-          <DateTimePicker
-            mode="date"
-            display="calendar"
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
-        )}
       </Calendar>
+
+      {showDatePicker && (
+        <DateTimePicker
+          mode="date"
+          display="calendar"
+          value={selectedDate}
+          onChange={handleDateChange}
+        />
+      )}
+
+      {morningAvailability.map(({ hourFormatted, available }) => (
+        <AvailabilityTitle key={hourFormatted}>
+          {hourFormatted}
+        </AvailabilityTitle>
+      ))}
+
+      {afternoonAvailability.map(({ hourFormatted, available }) => (
+        <AvailabilityTitle key={hourFormatted}>
+          {hourFormatted}
+        </AvailabilityTitle>
+      ))}
     </Container>
   );
 };

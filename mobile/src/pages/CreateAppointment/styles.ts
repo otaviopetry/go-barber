@@ -98,3 +98,7 @@ export const OpenDatePickerButtonText = styled.Text`
   font-size: 16px;
   color: #232129;
 `;
+
+export const AvailabilityTitle = styled.Text`
+  color: #f4ede8;
+`;
