@@ -13,7 +13,9 @@ import {
   Header,
   BackButton,
   HeaderTitle,
+  Title,
   UserAvatar,
+  Content,
   ProvidersList,
   ProvidersListContainer,
   ProviderContainer,
@@ -23,7 +25,12 @@ import {
   CalendarTitle,
   OpenDatePickerButton,
   OpenDatePickerButtonText,
-  AvailabilityTitle,
+  Schedule,
+  Section,
+  SectionTitle,
+  SectionContent,
+  Hour,
+  HourText,
 } from './styles';
 
 interface RouteParams {
@@ -99,7 +106,7 @@ const CreateAppointment: React.FC = () => {
 
   const morningAvailability = useMemo(() => {
     return availability
-      .filter(({ hour }) => hour < 12)
+      .filter(({ hour }) => hour < 13)
       .map(({ hour, available }) => {
         return {
           hour,
@@ -111,7 +118,7 @@ const CreateAppointment: React.FC = () => {
 
   const afternoonAvailability = useMemo(() => {
     return availability
-      .filter(({ hour }) => hour >= 12)
+      .filter(({ hour }) => hour >= 13)
       .map(({ hour, available }) => {
         return {
           hour,
@@ -145,46 +152,64 @@ const CreateAppointment: React.FC = () => {
         <UserAvatar source={{ uri: user.avatar_url }} />
       </Header>
 
-      <ProvidersListContainer>
-        <ProvidersList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={providers}
-          keyExtractor={(provider: Provider) => provider.id}
-          renderItem={ProviderItem}
-        />
-      </ProvidersListContainer>
+      <Content>
+        <ProvidersListContainer>
+          <ProvidersList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={providers}
+            keyExtractor={(provider: Provider) => provider.id}
+            renderItem={ProviderItem}
+          />
+        </ProvidersListContainer>
 
-      <Calendar>
-        <CalendarTitle>Escolha a data</CalendarTitle>
+        <Calendar>
+          <CalendarTitle>Escolha a data</CalendarTitle>
 
-        <OpenDatePickerButton onPress={handleToggleDatePicker}>
-          <OpenDatePickerButtonText>
-            Selecionar outra data
-          </OpenDatePickerButtonText>
-        </OpenDatePickerButton>
-      </Calendar>
+          <OpenDatePickerButton onPress={handleToggleDatePicker}>
+            <OpenDatePickerButtonText>
+              Selecionar outra data
+            </OpenDatePickerButtonText>
+          </OpenDatePickerButton>
+        </Calendar>
 
-      {showDatePicker && (
-        <DateTimePicker
-          mode="date"
-          display="calendar"
-          value={selectedDate}
-          onChange={handleDateChange}
-        />
-      )}
+        <Schedule>
+          <Title>Escolha o horário</Title>
 
-      {morningAvailability.map(({ hourFormatted, available }) => (
-        <AvailabilityTitle key={hourFormatted}>
-          {hourFormatted}
-        </AvailabilityTitle>
-      ))}
+          <Section>
+            <SectionTitle>Manhã</SectionTitle>
 
-      {afternoonAvailability.map(({ hourFormatted, available }) => (
-        <AvailabilityTitle key={hourFormatted}>
-          {hourFormatted}
-        </AvailabilityTitle>
-      ))}
+            <SectionContent>
+              {morningAvailability.map(({ hourFormatted, available }) => (
+                <Hour available={available} key={hourFormatted}>
+                  <HourText>{hourFormatted}</HourText>
+                </Hour>
+              ))}
+            </SectionContent>
+          </Section>
+
+          <Section>
+            <SectionTitle>Tarde</SectionTitle>
+
+            <SectionContent>
+              {afternoonAvailability.map(({ hourFormatted, available }) => (
+                <Hour available={available} key={hourFormatted}>
+                  <HourText>{hourFormatted}</HourText>
+                </Hour>
+              ))}
+            </SectionContent>
+          </Section>
+        </Schedule>
+
+        {showDatePicker && (
+          <DateTimePicker
+            mode="date"
+            display="calendar"
+            value={selectedDate}
+            onChange={handleDateChange}
+          />
+        )}
+      </Content>
     </Container>
   );
 };
