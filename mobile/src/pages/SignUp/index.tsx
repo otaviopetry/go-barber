@@ -9,7 +9,7 @@ import {
   Platform,
   ScrollView,
   TextInput,
-  Alert
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { Form } from '@unform/mobile';
@@ -66,8 +66,8 @@ const SignUp: React.FC = () => {
 
         Alert.alert(
           'Cadastro realizado com sucesso!',
-          'Você já pode fazer login na plataforma GoBarber.'
-        )
+          'Você já pode fazer login na plataforma GoBarber.',
+        );
 
         navigation.navigate('SignIn');
       } catch (err) {
@@ -81,11 +81,11 @@ const SignUp: React.FC = () => {
 
         Alert.alert(
           'Erro no cadastro',
-          'Ocorreu um erro ao fazer o cadastro. Por favor, tente novamente'
+          'Ocorreu um erro ao fazer o cadastro. Por favor, tente novamente',
         );
       }
     },
-    [],
+    [navigation],
   );
 
   return (
@@ -142,7 +142,9 @@ const SignUp: React.FC = () => {
                 onSubmitEditing={() => formRef.current?.submitForm()}
               />
 
-              <Button onPress={() => formRef.current?.submitForm()}>Entrar</Button>
+              <Button onPress={() => formRef.current?.submitForm()}>
+                Entrar
+              </Button>
             </Form>
           </Container>
         </ScrollView>
@@ -162,8 +164,8 @@ const SignUp: React.FC = () => {
 
 const styles = StyleSheet.create({
   form: {
-    width: '100%'
-  }
+    width: '100%',
+  },
 });
 
 export default SignUp;

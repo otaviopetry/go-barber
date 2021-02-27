@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useRef, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -31,6 +32,11 @@ import {
 } from './styles';
 import { useAuth } from '../../hooks/auth';
 
+const styles = StyleSheet.create({
+  form: {
+    width: '100%',
+  },
+});
 interface ProfileFormData {
   name: string;
   email: string;
@@ -50,73 +56,80 @@ const Profile: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const confirmPasswordInputRef = useRef<TextInput>(null);
 
-  const handleUpdateProfile = useCallback(async (data: ProfileFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleUpdateProfile = useCallback(
+    async (data: ProfileFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Informe seu nome'),
-        email: Yup.string()
-          .required('Informe seu e-mail')
-          .email('Seu e-mail está correto?'),
-        old_password: Yup.string(),
-        password: Yup.string().when('old_password', {
-          is: val => !!val.length,
-          then: Yup.string().required(),
-          otherwise: Yup.string(),
-        }),
-        password_confirmation: Yup.string()
-          .when('old_password', {
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Informe seu nome'),
+          email: Yup.string()
+            .required('Informe seu e-mail')
+            .email('Seu e-mail está correto?'),
+          old_password: Yup.string(),
+          password: Yup.string().when('old_password', {
             is: val => !!val.length,
             then: Yup.string().required(),
             otherwise: Yup.string(),
-          })
-          .oneOf([Yup.ref('password'), undefined], 'Confirmação incorreta'),
-      });
+          }),
+          password_confirmation: Yup.string()
+            .when('old_password', {
+              is: val => !!val.length,
+              then: Yup.string().required(),
+              otherwise: Yup.string(),
+            })
+            .oneOf([Yup.ref('password'), undefined], 'Confirmação incorreta'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      const {
-        name,
-        email,
-        old_password,
-        password,
-        password_confirmation,
-      } = data;
+        const {
+          name,
+          email,
+          old_password,
+          password,
+          password_confirmation,
+        } = data;
 
-      const formData = {
-        name,
-        email,
-        ...(old_password
-          ? {
-              old_password,
-              password,
-              password_confirmation,
-            }
-          : {}),
-      };
+        const formData = {
+          name,
+          email,
+          ...(old_password
+            ? {
+                old_password,
+                password,
+                password_confirmation,
+              }
+            : {}),
+        };
 
-      const response = await api.put('/profile', formData);
+        const response = await api.put('/profile', formData);
 
-      updateUser(response.data);
+        updateUser(response.data);
 
-      Alert.alert('Perfil atualizado com sucesso!');
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
+        Alert.alert('Perfil atualizado com sucesso!');
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
 
-        formRef.current?.setErrors(errors);
+          formRef.current?.setErrors(errors);
 
-        return;
+          return;
+        }
+
+        Alert.alert(
+          'Erro na atualização',
+          'Ocorreu um erro ao atualizar seu perfil. Por favor, tente novamente',
+        );
       }
+    },
+    [updateUser],
+  );
 
-      Alert.alert(
-        'Erro na atualização',
-        'Ocorreu um erro ao atualizar seu perfil. Por favor, tente novamente',
-      );
-    }
+  const handleUpdateAvatar = useCallback(() => {
+    console.log('Update avatar');
   }, []);
 
   const handleGoBack = useCallback(() => {
@@ -137,7 +150,7 @@ const Profile: React.FC = () => {
               <Icon name="chevron-left" size={24} color="#999591" />
             </BackButton>
 
-            <UserAvatarButton onPress={() => {}}>
+            <UserAvatarButton onPress={handleUpdateAvatar}>
               <UserAvatar source={{ uri: user.avatar_url }} />
             </UserAvatarButton>
 
@@ -222,11 +235,5 @@ const Profile: React.FC = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  form: {
-    width: '100%',
-  },
-});
 
 export default Profile;

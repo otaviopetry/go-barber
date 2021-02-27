@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList } from 'react-native-gesture-handler';
 
 import { useNavigation } from '@react-navigation/core';
 import Icon from 'react-native-vector-icons/Feather';
